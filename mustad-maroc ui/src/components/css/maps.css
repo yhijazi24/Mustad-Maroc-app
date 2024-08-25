@@ -1,0 +1,65 @@
+.maps-container {
+    position: relative;
+    width: 100%;
+    height: 385px;
+}
+
+.maps-info {
+    position: absolute;
+    top: 25%;
+    left: 50px;
+    background-color: #1471B5;
+    color: white;
+    padding: 20px;
+    width: 200px;
+    text-align: left;
+    z-index: 1;
+}
+
+.maps-title {
+    font-size: 36px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.maps-line {
+    content: " ";
+    display: inline-block;
+    width: 10px;
+    height: 30px;
+    border-left: 2px solid white;
+    transform: rotate(90deg);
+    margin-left: 10px;
+
+}
+
+.maps-address,
+.maps-phone {
+    font-size: 16px;
+    font-weight: 300;
+    margin: 0;
+}
+
+.maps-phone {
+    margin-top: 5px;
+}
+
+@media only screen and (max-width:650px) {
+    .maps-title {
+        font-size: 25px;
+    }
+
+    .maps-address,
+    .maps-phone {
+        font-size: 12px;
+    }
+    .maps-info{
+        width: 150px;
+    }
+}
+
+@media only screen and (max-width:460px) {
+    .maps-info{
+        display: none;
+    }
+}

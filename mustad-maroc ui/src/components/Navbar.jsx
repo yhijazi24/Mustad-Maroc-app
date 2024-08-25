@@ -28,7 +28,12 @@ const Navbar = () => {
       }
     }
   });
-
+  const handleScrollToMaps = () => {
+    const mapsElement = document.getElementById('Maps');
+    if (mapsElement) {
+      mapsElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
 
@@ -57,7 +62,7 @@ const Navbar = () => {
           <div className='navbar-icon'>
             <FmdGoodOutlined />
           </div>
-          <div className='navbar-icon'>
+          <div className='navbar-icon' onClick={handleScrollToMaps}>
             <PersonOutlineOutlined />
           </div>
           <div className='navbar-icon'>

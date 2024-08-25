@@ -1,0 +1,38 @@
+.footer-container {
+    background: #D5E3EB;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.footer-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: start;
+    flex-wrap: wrap;
+    column-gap: 34px;
+    row-gap: 10px;
+}
+.links-title{
+    font-size: 21px;
+}
+.link{
+    font-size: 16px;
+    color: black;
+    transition: color .5s ease;
+    cursor: pointer;
+}
+.link:hover{
+    color: gray;
+}
+.method-img{
+    height: 70px;
+}
+
+.copyright{
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 10px;
+    margin: 0;
+}

@@ -1,0 +1,31 @@
+.brands-container{
+    background-color: #d2d2d2;
+    padding: 20px 0 ;
+}
+
+.brands-wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    column-gap: 60px;
+    row-gap: 10px;
+}
+
+.brands-home-img{
+    height: 50px;
+    width: auto;
+}
+
+@media only screen and (max-width:1800px){
+    .brands-home-img {
+        height: 40px;
+    }
+} 
+
+@media only screen and (max-width:1440px){
+    .brands-home-img {
+        height: 30px;
+    }
+} 

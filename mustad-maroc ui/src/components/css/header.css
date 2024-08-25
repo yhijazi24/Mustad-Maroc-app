@@ -1,3 +1,6 @@
+.header-container{
+    overflow: hidden;
+}
 .header-wrapper {
     width: 100vw;
     height: 100vh;
@@ -86,7 +89,7 @@
     background: white;
     color: #1471B5;
     border: 1px solid #1471B5;
-    padding: 12.2px 19.2px;
+    padding: 12px 19px;
 }
 
 @media only screen and (max-width:988px) {
