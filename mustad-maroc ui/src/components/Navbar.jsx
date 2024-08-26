@@ -59,10 +59,10 @@ const Navbar = () => {
           <div className='navbar-menu'>Contact</div>
         </div>
         <div className='navbar-list-menu'>
-          <div className='navbar-icon'>
+          <div className='navbar-icon' onClick={handleScrollToMaps}>
             <FmdGoodOutlined />
           </div>
-          <div className='navbar-icon' onClick={handleScrollToMaps}>
+          <div className='navbar-icon' >
             <PersonOutlineOutlined />
           </div>
           <div className='navbar-icon'>
