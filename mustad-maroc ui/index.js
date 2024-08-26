@@ -42,31 +42,43 @@ export const brandsList = [
     id: 1,
     img: " https://www.mustad.com/sites/mustad.com/files/styles/brand_logo/public/brand_logo/Logo_The_hoofcare_people.png?itok=4ESYlvZA",
     title: "Mustad Hoofcare",
+    desc:["Horseshoes", "Nails", "Tools", "Care"],
+    website:"https://www.mustad.com/en_gb",
   },
   {
     id: 2,
     img: "https://www.mustad.com/sites/mustad.com/files/styles/brand_logo/public/brand_logo/StCroixForge_FC.png?itok=GzsKHedn",
     title: "St Croix Forge",
+    desc:["Horseshoes"],
+    website:"https://www.stcroixforge.com/en_gb",
   },
   {
     id: 3,
     img: " https://www.mustad.com/sites/mustad.com/files/styles/brand_logo/public/brand_logo/FINAL_HellerLogo101008.png?itok=iOzx1S5q",
     title: "Heller Hoof Rasps",
+    desc:["Rasps"],
+    website:"https://www.hellerhoofrasps.com/en_gb",
   },
   {
     id: 4,
     img: " https://www.mustad.com/sites/mustad.com/files/styles/brand_logo/public/brand_logo/Capewell_FC.png?itok=GVfjz39v",
     title: "Capewell",
+    desc:["Nails"],
+    website:"https://www.capewellhorsenails.com/en_gb"
   },
   {
     id: 5,
     img: "https://www.mustad.com/sites/mustad.com/files/styles/brand_logo/public/brand_logo/delta_logo_color.png?itok=Kvw52zfs",
     title: "Delta Farrier Products",
+    desc:["Horseshoes", "Nails", "Tools", "Hoof boots"],
+    website:"",
   },
   {
     id: 6,
     img: "https://www.mustad.com/sites/mustad.com/files/styles/brand_logo/public/brand_logo/Derby_FC.png?itok=nYE8MUeF",
     title: "Derby Hoof Nails",
+    desc:["Nails"],
+    website:"https://www.mustad.com/en_us",
   },
 ]
 

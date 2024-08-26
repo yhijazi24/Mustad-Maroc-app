@@ -1,0 +1,120 @@
+.brands-header {
+    background: rgb(20, 113, 181);
+    background: linear-gradient(90deg, rgba(20, 113, 181, 1) 0%, rgba(57, 135, 191, 1) 12%, rgba(153, 192, 218, 1) 65%, rgba(213, 227, 235, 1) 100%);
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brands-header-title {
+    font-size: 70px;
+    font-weight: 400;
+    letter-spacing: 15px;
+    text-align: center;
+    line-height: 1.25em;
+}
+
+.brands-list-content {
+    display: flex;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 50px;
+    row-gap: 10px;
+    column-gap: 45px;
+}
+
+.brands-content-img {
+    height: 90px;
+    width: auto;
+}
+
+.content-img{
+    max-height: 90px;
+}
+
+.brands-content{
+    padding: 20px 30px;
+    margin: 20px 30px;
+    max-width: 350px;
+    cursor: pointer;
+    background-color: white;
+    transition: background-color .5s ease;
+}
+
+.brands-list-title{
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: 2.5px;
+    margin: 0;
+}
+
+.brands-list-desc{
+    margin-top: 7px;
+    letter-spacing: 1.5px;
+    font-weight: 400;
+}
+.brands-content-img{
+    background-color: white;
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 20px;
+}
+
+.brands-content:hover{
+background-color: #1471B5;
+}
+.brands-list-info{
+    opacity: 1;
+    padding: 20px;
+    transition: opacity .5s ease;
+}
+.brands-list-info-card{
+    position: relative;
+}
+.brand-website{
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity .5s ease;
+    font-size: 18px;
+    color: white;
+}
+.brands-content-link{
+    text-decoration: none;
+}
+.brands-content:hover .brands-list-info{
+    opacity: 0;
+}
+.brands-content:hover .brand-website{
+    opacity: 1;
+}
+.brands-content:hover .brands-content-img{
+    background-color: white;
+}
+
+@media only screen and (max-width:700px){
+    .brands-header-title{
+        font-size: 45px;
+    }
+}
+
+@media only screen and (max-width:450px){
+    .brands-content{
+        max-width: 200px;
+    }
+    .content-img{
+        max-width: 150px;
+    }
+}

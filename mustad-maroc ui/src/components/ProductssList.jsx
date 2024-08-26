@@ -90,7 +90,7 @@ const ProductssList = () => {
                   {item.activity.slice(0, 5).map((activity, index) => (
                     <span key={index}>
                       {activity}
-                      {index < 4 && " | "} {/* Use 4 here to avoid adding pipe after the last item */}
+                      {index < 4 && " | "} 
                     </span>
                   ))}
                   {item.activity.length > 5 && <span>...</span>}
