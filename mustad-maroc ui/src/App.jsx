@@ -14,14 +14,16 @@ import {
   Navigate
 } from "react-router-dom";
 import { useSelector } from 'react-redux'
+import ScrollToTop from './ScrollToTop'
 
 
 function App() {
-
-  const user = useSelector((state) => state.user.currentUser);
+  const user = false;
+  //const user = useSelector((state) => state.user.currentUser);
 
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route path="/products/:type" element={<ProductsList />} />

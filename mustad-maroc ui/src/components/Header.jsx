@@ -1,6 +1,7 @@
 import React from 'react'
 import "./css/header.css"
 import { headerItems } from '../..'
+import { Link } from 'react-router-dom'
 
 const Header = () => {
   return (
@@ -16,7 +17,9 @@ const Header = () => {
               <p className='header-desc'>{item.desc}</p>
             </div>
             <div className='header-button-wrapper'>
+            <Link to="/contact" style={{ textDecoration: 'none' }}>
               <button className='header-button'>GET IN TOUCH</button>
+              </Link>
             </div>
           </div>
         </div>

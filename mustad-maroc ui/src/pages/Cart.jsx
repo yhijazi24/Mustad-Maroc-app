@@ -1,39 +1,32 @@
 import { useState } from "react";
-import { Add, Remove } from "@mui/icons-material";
+import { Add, Delete, Remove } from "@mui/icons-material";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import Maps from "../components/Maps";
 import "./css/cart.css";
 import { useSelector, useDispatch } from "react-redux";
-import { addProduct } from "../redux/cartRedux"; 
+import { addProduct, removeProduct, updateProductQuantity } from "../redux/cartRedux"; 
+import { Link, useNavigate } from "react-router-dom";
 
 const Cart = () => {
-    const cart = useSelector(state => state.cart);
+    const cart = useSelector((state) => state.cart);
+    const dispatch = useDispatch();
 
-    /* const [quantity, setQuantity] = useState(1);
-  
-  
-  const handleQuantity = (type) =>{
-    if(type == "dec"){
-      quantity > 1 && setQuantity(quantity - 1);
-    }else {
-      setQuantity(quantity+1);
-    }
-  };
-
-
-
-    // Calculate totals
-   const calculateSubtotal = () => {
-        return cart.products.reduce((total, product) => total + product.price * quantity[product._id], 0);
+    const handleQuantityChange = (product, type) => {
+        if (type === "dec" && product.quantity > 1){
+            dispatch(updateProductQuantity({id: product._id, quantity: product.quantity - 1}));
+        }else if (type === "inc"){
+            dispatch(updateProductQuantity({id: product._id, quantity: product.quantity + 1}));
+        }
     };
 
-    const subtotal = calculateSubtotal();
-    const shipping = 5.90;
-    const shippingDiscount = -5.90;
-    const total = subtotal + shipping + shippingDiscount;
-
-    // Log products and their IDs for debugging*/
-    console.log("Products in cart:", cart.products);
+    const handleRemoveProduct = (productId) =>{
+        dispatch(removeProduct({id: productId}));
+    };
+    const navigate = useNavigate();
+    const handleGoToProducts = () => {
+        navigate('/', { state: { scrollToProducts: true } });
+      };
 
     return (
         <div className="container">
@@ -41,10 +34,9 @@ const Cart = () => {
             <div className="cart-wrapper">
                 <h1 className="cart-title">YOUR BAG</h1>
                 <div className="cart-top">
-                    <button className="cart-topButton">CONTINUE SHOPPING</button>
+                    <button className="cart-topButton" onClick={handleGoToProducts}>CONTINUE SHOPPING</button>
                     <div className="cart-topTexts">
                         <span className="cart-topText">Shopping Bag</span>
-                        <span className="cart-topText">Your Wishlist</span>
                     </div>
                     <button className="cart-topButton filled">CHECKOUT NOW</button>
                 </div>
@@ -62,11 +54,12 @@ const Cart = () => {
                                     </div>
                                     <div className="cart-price-amount">
                                         <div className="cart-productAmountContainer">
-                                            <Remove 
-                                            />
+                                            <Remove onClick={()=>handleQuantityChange(product, "dec")}/>
                                             <div className="cart-productAmount">{product.quantity}</div>
-                                            <Add 
-                                            />
+                                            <Add onClick={()=>handleQuantityChange(product, "inc")}/>
+                                        </div>
+                                        <div className="product-remove">
+                                            <Delete onClick={()=> handleRemoveProduct(product._id)} />
                                         </div>
                                         <div className="product-cart-size"><span className="cart-size-title">Size : </span>{product.size}</div>
                                         <div className="cart-productPrice">${product.price * product.quantity}</div>
@@ -97,6 +90,7 @@ const Cart = () => {
                     </div>
                 </div>
             </div>
+            <Maps />
             <Footer />
         </div>
     );

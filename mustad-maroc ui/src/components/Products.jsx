@@ -1,11 +1,22 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import "./css/products.css";
 import { productsCardItems } from '../../index';
 
 const Products = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.scrollToProducts) {
+      const productsElement = document.getElementById('Products');
+      if (productsElement) {
+        productsElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [location]);
+
   return (
-    <div className='products-container'>
+    <div className='products-container' id='Products'>
       <div className='products-wrapper'>
         <h1 className='products-title'>OUR PRODUCTS</h1>
         <div className='products-grid'>

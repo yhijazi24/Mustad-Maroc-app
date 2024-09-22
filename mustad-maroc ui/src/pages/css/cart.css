@@ -182,11 +182,6 @@
 }
 
 .cart-topText {
-    color: black;
-    transition: all .5s ease;
-}
-
-.cart-topText:hover {
     color: #1471B5;
 }
 

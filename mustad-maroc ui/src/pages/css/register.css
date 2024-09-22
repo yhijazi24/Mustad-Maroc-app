@@ -78,10 +78,10 @@ input::placeholder {
 }
 
 .register-error {
-    font-size: 14px;
+    font-size: 18px;
     color: red;
     text-align: center;
-    display: none;
+    padding: 20px;
 }
 
 .register-link {
@@ -192,7 +192,7 @@ input::placeholder {
     font-size: 19px;
     font-weight: 300;
     letter-spacing: 3px;
-    margin-top: 10px;
+    margin: 10px 0;
     transition: all .5s ease;
 }
 

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "./css/navbar.css";
 import { FmdGoodOutlined, MenuSharp, PersonOutlineOutlined, ShoppingCartOutlined, Sledding } from '@mui/icons-material';
 import Badge from '@mui/material/Badge';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   const dropDown = () => {
@@ -39,30 +39,47 @@ const Navbar = () => {
 
   const quantity = useSelector(state => state.cart.quantity);
 
-  console.log(quantity);
+
 
   return (
 
     <div className='navbar-container'>
       <div className='logo-container'>
-        <img src='https://www.mustad.com/sites/mustad.com/files/logo/Mustad%E2%80%94logo.svg' className='logo' alt="logo" />
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <img src='https://www.mustad.com/sites/mustad.com/files/logo/Mustad%E2%80%94logo.svg' className='logo' alt="logo" />
+        </Link>
       </div>
       <div className='top-nav' id='hamburgerMenu'>
         <div className='navbar-list'>
-          <div className='navbar-menu'>Home</div>
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <div className='navbar-menu'>Home</div>
+          </Link>
           <div className='navbar-menu dropdown'>
+
             <span className='navbar-menu-product'>Products</span>
             <div className='navbar-dropdown'>
-              <div className='navbar-menu-drop'>Horseshoes</div>
-              <div className='navbar-menu-drop'>Horse Nails</div>
-              <div className='navbar-menu-drop'>Rasps</div>
-              <div className='navbar-menu-drop'>Tools</div>
-              <div className='navbar-menu-drop'>Care</div>
+              <Link to="/products/horseshoes" style={{ textDecoration: 'none' }}>
+                <div className='navbar-menu-drop'>Horseshoes</div>
+              </Link>
+              <Link to="/products/nails" style={{ textDecoration: 'none' }}>
+                <div className='navbar-menu-drop'>Horse Nails</div>
+              </Link>
+              <Link to="/products/rasps" style={{ textDecoration: 'none' }}>
+                <div className='navbar-menu-drop'>Rasps</div>
+              </Link>
+              <Link to="/products/tools" style={{ textDecoration: 'none' }}>
+                <div className='navbar-menu-drop'>Tools</div>
+              </Link>
+              <Link to="/products/care" style={{ textDecoration: 'none' }}>
+                <div className='navbar-menu-drop'>Care</div>
+              </Link>
             </div>
           </div>
-
-          <div className='navbar-menu'>Brands</div>
-          <div className='navbar-menu'>Contact</div>
+          <Link to="/brands" style={{ textDecoration: 'none' }}>
+            <div className='navbar-menu'>Brands</div>
+            </Link>
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <div className='navbar-menu'>Contact</div></Link>
         </div>
         <div className='navbar-list-menu'>
           <div className='navbar-icon' onClick={handleScrollToMaps}>

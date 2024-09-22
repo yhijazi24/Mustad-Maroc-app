@@ -9,6 +9,17 @@ export const publicRequest = axios.create({
 
 export const userRequest = axios.create({
     baseURL: BASE_URL,
-    header:{token:`Bearer ${TOKEN}`},
+    headers:{token:`Bearer ${TOKEN}`},
 });
+
+publicRequest.interceptors.response.use(
+    response => {
+        console.log('Response:', response);
+        return response;
+    },
+    error => {
+        console.error('Error Response:', error);
+        return Promise.reject(error);
+    }
+);
 
