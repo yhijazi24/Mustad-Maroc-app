@@ -58,6 +58,23 @@
     text-align: center;
 }
 
+.reset-filters{
+    height: 50px;
+    width: 250px;
+    font-size: 18px;
+    color: #04243C;
+    background-color: #D5E3EB;
+    border: 1px solid #1471B5;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color .6 ease, border .6s ease;
+}
+
+.reset-filters:hover{
+    background-color:#1471B5 ;
+    border: 1px solid #D5E3EB;
+}
+
 .filter-option {
     font-size: 14px;
     text-align: start;
@@ -83,13 +100,14 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
     column-gap: 20px;
-    width: fit-content;
     padding: 20px 40px;
     margin: 20px 90px;
     border: 1px solid black;
     cursor: pointer;
+    text-decoration: none;
+    box-sizing: border-box;
+    max-width: 700px;
     transition: background-color .5s ease;
 }
 
@@ -108,14 +126,15 @@
 
 .product-title {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     justify-content: space-between;
 
 }
 
 .product-info-title-desc {
     display: flex;
+    flex-direction: 3;
     flex-direction: column;
     align-items: flex-start;
 
@@ -143,9 +162,10 @@
 
 .product-info-availability {
     color: #1BC049;
-    font-size: 20px;
+    font-size: 12px;
     font-weight: normal;
     display: flex;
+    flex: 1;
     align-items: center;
     letter-spacing: 2px;
 }
@@ -203,12 +223,14 @@
     align-items: center;
     column-gap: 5px;
 }
-.pagination button{
+
+.pagination button {
     background-color: #1471B5;
     color: white;
     border: 1px solid gray;
 }
-.active{
+
+.active {
     background-color: white !important;
     color: #1471B5 !important;
     border: 1px solid #1471B5 !important;
@@ -231,7 +253,7 @@
 @media only screen and (max-width:889px) {
     .list-filter::after {
         width: 650px;
-        top: 125%;
+        top: 110%;
     }
 }
 
@@ -272,5 +294,22 @@
 @media only screen and (max-width: 380px) {
     .product-img {
         height: 120px;
+    }
+}
+
+@media only screen and (max-width:990px) {
+    .list-product {
+        flex-wrap: wrap;
+    }
+}
+
+@media only screen and (max-width:643px) {
+    .product-info-title {
+        font-size: 30px;
+    }
+}
+@media only screen and (max-width:475px) {
+    .product-info-title {
+        font-size: 20px;
     }
 }

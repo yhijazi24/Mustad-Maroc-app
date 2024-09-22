@@ -11,26 +11,31 @@ export const headerItems = [
 export const productsCardItems = [
   {
     id: 1,
+    type: "horseshoes",
     img: "https://pbs.twimg.com/media/FJS_S2aXoAALfLx?format=jpg&name=large",
     title: "HORSESHOES",
   },
   {
     id: 2,
+    type: "rasps",
     img: "https://scontent.fcmn3-1.fna.fbcdn.net/v/t39.30808-6/269837713_5010096075690544_5454351965010999021_n.jpg?stp=dst-jpg_s640x640&_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=trq17LUAe84Q7kNvgG-Sfw-&_nc_ht=scontent.fcmn3-1.fna&oh=00_AYAYaJASCdV7cc80vvMiUCmH-fKLxhj4CXso4_A8EER9pA&oe=66D0DE38",
     title: "RASPS",
   },
   {
     id: 3,
+    type: "tools",
     img: "https://www.mustad.com/sites/mustad.com/files/styles/twig_image_1240_920/public/images/premium_tools_editedjkr_home.jpg?itok=EZST8T6-",
     title: "TOOLS",
   },
   {
     id: 4,
+    type: "care",
     img: "https://pbs.twimg.com/media/E_zrfMDVEAQkVWH?format=jpg&name=4096x4096",
     title: "CARE",
   },
   {
     id: 5,
+    type: "nails",
     img: "https://www.mustad.com/sites/mustad.com/files/styles/1000x515_focal/public/2024-02/exl_pitch_june_23_4_copy.jpg?h=99220be1&itok=6G3vRDHl",
     title: "HORSE NAILS",
   },
@@ -93,7 +98,7 @@ export const headerProducts = [
 
 export const filterOptions = [
   {
-    Applications: ["Equine agility", "Steeplechase", "Endurance", "Halter", "English pleasure", "Working cow horse", "Draft", "Draft horse showing", "Mounted orienteering", "Saddle bronc and bareback riding ", "Barrel racing ", "Calf roping ", "Show hunter", "Working equitation", "Cross-country", "Harness racing ", "Thoroughbred horse racing", "Flat racing ", "Field hunting", "Fox hunting", "Classical dressage", "Eventing", "Competitive trail riding", "Cowboy mounted shooting", "Team roping ", "Show jumping ", "Quarter horse", "Cutting ", "Dressage", "Stunt riding", "Dzhigitovka ", "Icelandic equitation", "Horse showmanship", "Leisure", "Gymkhana (equestrian)", "Show hack", "Horseball", "Point-to-point ", "Mounted games", "Reining", "Polo", "Pleasure riding", "Saddle seat", "Polocrosse", "Roadster", "Horse pulling", "Pleasure driving", "Trail", "Trail riding"],
+    Activity: ["Equine agility", "Steeplechase", "Endurance", "Halter", "English pleasure", "Working cow horse", "Draft", "Draft horse showing", "Mounted orienteering", "Saddle bronc and bareback riding ", "Barrel racing ", "Calf roping ", "Show hunter", "Working equitation", "Cross-country", "Harness racing ", "Thoroughbred horse racing", "Flat racing ", "Field hunting", "Fox hunting", "Classical dressage", "Eventing", "Competitive trail riding", "Cowboy mounted shooting", "Team roping ", "Show jumping ", "Quarter horse", "Cutting ", "Dressage", "Stunt riding", "Dzhigitovka ", "Icelandic equitation", "Horse showmanship", "Leisure", "Gymkhana (equestrian)", "Show hack", "Horseball", "Point-to-point ", "Mounted games", "Reining", "Polo", "Pleasure riding", "Saddle seat", "Polocrosse", "Roadster", "Horse pulling", "Pleasure driving", "Trail", "Trail riding"],
     Terrain: ["Turf/Grass", "Mud", "avement", "Stoney ground", "Sand", "Synthetic"],
   },
 ]
@@ -219,5 +224,11 @@ export const productLists = [
     fullDesc: "The Mustad LiBero®  is a highly versatile 3/4 fullered shoe made from premium grade steel and manufactured in the Netherlands. Section- to - size design adjusts dimensions, Follows natural hoof shape, Definite left / right shapes for front / hind shoes, Slope heels for front, upright for hind, Edges broken / boxed for better functionality",
     terrain: ["Turf/Grass ", "Pavement ", "Stoney ground ", "Sand ","Synthetic ",],
     activity:["Camargue equitation ","Draft ", "Draft horse showing ","Dressage ","Icelandic equitation ","Leisure ","Pleasure riding ","Show jumping ","Pleasure driving "],
+  },
+]
+
+export const cart = [
+  {
+
   },
 ]

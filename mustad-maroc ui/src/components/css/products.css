@@ -74,6 +74,7 @@
     cursor: pointer;
     font-size: 18px;
     font-weight: bold;
+    text-decoration: none;
     transition: background-color 0.7s ease, color .5s ease;
 }
 
@@ -106,7 +107,6 @@
     grid-column: 3 / span 2;
     grid-row: 2 / span 3;
 }
-
 
 @media only screen and (max-width: 1024px) {
     .card-info-title {

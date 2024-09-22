@@ -1,0 +1,238 @@
+.cart-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.cart-bottom {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.cart-info {
+    flex: 2.5;
+    background-color: #f1f1f1;
+}
+
+.cart-summary {
+    flex: 1;
+    padding: 20px;
+    background-color: #f1f1f1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.cart-product {
+    display: flex;
+    gap: 20px;
+    padding: 40px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-image {
+    max-width: 150px;
+    object-fit: cover;
+    mix-blend-mode: multiply;
+}
+
+.cart-productDetail {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cart-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.cart-productName {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 2.2px;
+}
+
+.cart-productId {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #888;
+}
+
+.cart-priceDetail {
+    flex: 3;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.cart-price-amount {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.cart-productAmountContainer {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.cart-productAmount {
+    font-size: 18px;
+    padding: 5px;
+    width: 30px;
+    text-align: center;
+}
+
+.cart-productPrice {
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    color: black;
+}
+
+.cart-summaryTitle {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.cart-summaryItem {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.cart-summaryItem.total {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.cart-summaryItemText {
+    font-size: 16px;
+}
+
+.cart-summaryItemPrice {
+    font-size: 16px;
+}
+
+.cart-summary .filled {
+    background-color: #1471B5;
+    color: white;
+    padding: 15px;
+    margin: 5px 0px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    border: none;
+    width: 100%;
+    text-align: center;
+    letter-spacing: 5px;
+}
+
+.cart-top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+}
+
+.cart-topButton {
+    cursor: pointer;
+    background-color: #1471B5;
+    color: white;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 3px;
+    border: none;
+    padding: 15px 20px;
+    transition: all .5s ease;
+}
+
+.cart-topButton:hover {
+    background-color: white;
+    color: #1471B5;
+    border: 1px solid #1471B5;
+}
+
+.cart-topTexts {
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    gap: 30px;
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+
+.cart-topText {
+    color: black;
+    transition: all .5s ease;
+}
+
+.cart-topText:hover {
+    color: #1471B5;
+}
+
+.total {
+    border-top: 1px solid black;
+    padding-top: 5px;
+}
+
+.cart-summaryItem {
+    width: 100%;
+}
+
+.cart-bottom {
+    padding: 10px;
+    margin: 10px;
+}
+
+.cart-title {
+    display: none;
+}
+
+.product-cart-size{
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    color: black;
+}
+
+@media only screen and (max-width:820px) {
+    .cart-top {
+        flex-direction: column;
+        row-gap: 20px;
+    }
+    .cart-bottom {
+        flex-direction: column;
+    }
+    .cart-info, .cart-summary{
+        width: 100%;
+    }
+    .cart-summary{
+        box-sizing: border-box;
+    }
+}
+
+@media only screen and (max-width:530px){
+    .cart-product {
+        flex-direction: column;
+    }
+}

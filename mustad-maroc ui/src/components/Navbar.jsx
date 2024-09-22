@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import "./css/navbar.css";
-import { FmdGoodOutlined, MenuSharp, PersonOutlineOutlined, ShoppingCartOutlined } from '@mui/icons-material';
+import { FmdGoodOutlined, MenuSharp, PersonOutlineOutlined, ShoppingCartOutlined, Sledding } from '@mui/icons-material';
 import Badge from '@mui/material/Badge';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const dropDown = () => {
@@ -35,6 +37,10 @@ const Navbar = () => {
     }
   };
 
+  const quantity = useSelector(state => state.cart.quantity);
+
+  console.log(quantity);
+
   return (
 
     <div className='navbar-container'>
@@ -65,11 +71,14 @@ const Navbar = () => {
           <div className='navbar-icon' >
             <PersonOutlineOutlined />
           </div>
-          <div className='navbar-icon'>
-            <Badge badgeContent={4} color="primary">
-              <ShoppingCartOutlined />
-            </Badge>
-          </div>
+          <Link to="/cart">
+            <div className='navbar-icon'>
+
+              <Badge badgeContent={quantity} color="primary">
+                <ShoppingCartOutlined />
+              </Badge>
+            </div>
+          </Link>
         </div>
       </div>
       <div className='hamburger-menu' onClick={dropDown}>
