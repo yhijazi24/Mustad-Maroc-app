@@ -86,7 +86,9 @@ const Navbar = () => {
             <FmdGoodOutlined />
           </div>
           <div className='navbar-icon' >
+          <Link to="/login" style={{ textDecoration: 'none',    color: 'black' }}>
             <PersonOutlineOutlined />
+            </Link>
           </div>
           <Link to="/cart">
             <div className='navbar-icon'>
