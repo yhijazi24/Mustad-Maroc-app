@@ -27,13 +27,24 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
 });
 
 // Get ProductCard by title
-router.get("/", async (req, res) => {
+
+router.get("/:type", async (req, res) => {
     try {
-        const productCard = await ProductCard.findOne({ type: req.query.type });
+        const productCard = await ProductCard.findOne({ type: req.params.type });
         res.status(200).json(productCard);
     } catch (err) {
         res.status(500).json(err);
     }
 });
 
+//GET ALL
+
+router.get("/", async (req, res) => {  // New route for getting all headers
+    try {
+        const productCard = await ProductCard.find();
+        res.status(200).json(productCard);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
 module.exports = router;

@@ -43,7 +43,7 @@ res.data.map(item =>
 }, [MONTHS]);
 
   return (
-    <div>
+    <div className='home'>
       <FeaturedInfo />
       <Charts data={userStats} title="User Analytics" grid dataKey="Active User" />
       <div className='homeWidgets'>

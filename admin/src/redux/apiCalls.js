@@ -13,21 +13,21 @@ export const login = async (dispatch, user) => {
     }
 }
 
-export const getProducts = async (dispatch) => {
+export const getProducts = async (type, dispatch) => {
     dispatch(getProductStart());
     try {
-        const res = await publicRequest.get("/products/");
-        dispatch(getProductSuccess(res.data));
+      const res = await publicRequest.get(`/products/${type}`);
+      dispatch(getProductSuccess(res.data));
     } catch (err) {
-        dispatch(getProductFailure());
-
+      dispatch(getProductFailure());
     }
-}
+  };
+  
 
 export const deleteProduct = async (id, dispatch) => {
     dispatch(deleteProductStart());
     try {
-        // const res = await userRequest.delete(`/products/${id}`);
+        const res = await userRequest.delete(`/products/${id}`);
         dispatch(deleteProductSuccess(id));
     } catch (err) {
         dispatch(deleteProductFailure());
@@ -93,6 +93,62 @@ export const updateUser = async (id, userData) => {
         return response.data; 
     } catch (err) {
         console.error("Error updating user:", err);
+        return null;
+    }
+};
+
+export const getHeader = async () => {
+    try {
+      const res = await userRequest.get(`/header/`);
+      return res.data;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  export const updateHeader = async (headerId, updatedHeader) => {
+    try {
+      const res = await userRequest.put(`/header/${headerId}`, updatedHeader);
+      return res.data;
+    } catch (err) {
+      console.error("Error updating header:", err);
+      throw err;
+    }
+  };
+  export const getOneHeader = async (type) => {
+    try {
+        const response = await userRequest.get(`/header/type/${type}`);
+        return response.data; 
+    } catch (err) {
+        console.error("Error fetching user:", err);
+        return null;
+    }
+};
+
+export const getProductCard = async () => {
+    try {
+      const res = await userRequest.get(`/product-card/`);
+      return res.data;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  export const updateProductCard = async (cardId, updatedProductHeader) => {
+    try {
+      const res = await userRequest.put(`/product-card/${cardId}`, updatedProductHeader);
+      return res.data;
+    } catch (err) {
+      console.error("Error updating header:", err);
+      throw err;
+    }
+  };
+  export const getOneProductCard = async (type) => {
+    try {
+        const response = await userRequest.get(`/product-card/${type}`);
+        return response.data; 
+    } catch (err) {
+        console.error("Error fetching user:", err);
         return null;
     }
 };

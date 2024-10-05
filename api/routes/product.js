@@ -39,7 +39,7 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
     } catch (err) {
         res.status(500).json(err);
     }
-})
+}) 
 
 //Get Product
 
@@ -51,6 +51,16 @@ router.get("/find/:id", async (req, res) => {
         res.status(500).json(err);
     }
 })
+
+// Get Products By Type
+router.get("/:type", async (req, res) => {
+  try {
+    const products = await Product.find({ type: req.params.type });
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(500).json(err); 
+  }
+});
 
 //Get All Products
 

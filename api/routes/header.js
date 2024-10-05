@@ -26,15 +26,30 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
         res.status(500).json(err);
     }
 });
-//Delete
+//Get
 
-router.get("/", async (req, res) => {
+router.get("/type/:type", async (req, res) => {
+    console.log("Requested type:", req.params.type); // Log the requested type
     try {
-        const header = await Header.findOne({ type: req.query.type });
+        const header = await Header.findOne({ type: req.params.type });
+        console.log("Fetched header:", header); // Log the fetched header
         res.status(200).json(header);
+    } catch (err) {
+        console.error("Error fetching header:", err); // Log the error
+        res.status(500).json(err);
+    }
+});
+
+
+//GET ALL
+
+router.get("/", async (req, res) => {  // New route for getting all headers
+    try {
+        const headers = await Header.find(); // Fetch all headers from the database
+        res.status(200).json(headers);
     } catch (err) {
         res.status(500).json(err);
     }
-})
+});
 
 module.exports = router;
