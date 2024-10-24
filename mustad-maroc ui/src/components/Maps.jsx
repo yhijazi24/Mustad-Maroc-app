@@ -36,7 +36,7 @@ const Maps = () => {
   }, []);
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: 'AIzaSyAFOVo15-LD4_M9gERnCqTNZI_JAcmwV1c', // Ensure this is a valid API key
+    googleMapsApiKey:'' ,//'AIzaSyAFOVo15-LD4_M9gERnCqTNZI_JAcmwV1c', // Ensure this is a valid API key
   });
 
   if (!isLoaded) {
