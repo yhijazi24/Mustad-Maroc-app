@@ -1,12 +1,28 @@
-const mongoose = require("mongoose");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../sequelize');
 
-const HeaderSchema = new mongoose.Schema(
-    {
-        type: {type: String, required: true, unique: true},
-        title: {type: String,required: true, unique: true},
-        img: {type: String,required: true},
+const Header = sequelize.define('Header', {
+    type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
     },
-    { timestamps: true },
-)
+    title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
+    desc: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: false
+    },
+    img: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+}, {
+    timestamps: true
+});
 
-module.exports = mongoose.model('Header', HeaderSchema)
+module.exports = Header;

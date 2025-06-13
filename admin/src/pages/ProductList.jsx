@@ -10,19 +10,23 @@ const ProductList = () => {
   const { type } = useParams(); // Extract type from URL
   const dispatch = useDispatch();
   const products = useSelector((state) => state.product.products);
-
   useEffect(() => {
-    getProducts(type, dispatch); // Fetch products based on the type from URL
+    console.log("useParams type:", type); // Check what type is
+    if (type) {
+      getProducts(type, dispatch);
+    } else {
+      console.warn("No type provided in URL.");
+    }
   }, [type, dispatch]);
+
 
   const handleDelete = (id) => {
     deleteProduct(id, dispatch);
   };
 
-  const validProducts = Array.isArray(products) ? products.filter(product => product._id) : [];
+  const validProducts = Array.isArray(products) ? products.filter(product => product.id) : [];
 
   const columns = [
-    { field: "_id", headerName: "ID", width: 220 },
     {
       field: "product",
       headerName: "Product",
@@ -42,19 +46,27 @@ const ProductList = () => {
       width: 160,
     },
     {
-      field: "action",
-      headerName: "Action",
+      field: "Edit Product",
+      headerName: "Edit Product",
       width: 150,
       renderCell: (params) => {
         return (
           <>
-            <Link to={"/product/" + params.row._id}>
+            <Link to={"/product/" + params.row.id}>
               <button className="productListEdit">Edit</button>
             </Link>
-            <DeleteOutline
-              className="productListDelete"
-              onClick={() => handleDelete(params.row._id)}
-            />
+          </>
+        );
+      },
+    },
+    {
+      field: "delete",
+      headerName: "Delete Product",
+      width: 150,
+      renderCell: (params) => {
+        return (
+          <>
+            <button className="productListEdit" onClick={() => handleDelete(params.row.id)}>Delete</button>
           </>
         );
       },
@@ -62,16 +74,19 @@ const ProductList = () => {
   ];
 
   return (
-    <div className="productList">
-      <DataGrid
-        rows={validProducts}
-        disableSelectionOnClick
-        columns={columns}
-        getRowId={(row) => row._id} 
-        pageSize={8}
-        checkboxSelection
-      />
+    <div className='productWrapper'>
+      <div className="productList">
+        <DataGrid
+          rows={validProducts}
+          disableSelectionOnClick
+          columns={columns}
+          getRowId={(row) => row.id}
+          pageSize={8}
+          checkboxSelection
+        />
+      </div>
     </div>
+
   );
 }
 

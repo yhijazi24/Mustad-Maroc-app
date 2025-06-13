@@ -5,20 +5,25 @@ import { Link, useParams } from 'react-router-dom';
 import { getUser, updateUser } from '../redux/apiCalls'; // Import updateUser
 
 const User = () => {
-  const { userId } = useParams(); 
-  const [user, setUser] = useState(null); 
+  const { userId } = useParams();
+  const [user, setUser] = useState(null);
   const [updatedUser, setUpdatedUser] = useState({}); // State for user updates
   const [success, setSuccess] = useState(false); // State to track update success
+  const [previewImg, setPreviewImg] = useState(null); // for live preview
+  const [message, setMessage] = useState({ type: '', text: '' }); // success or error
 
   useEffect(() => {
+    console.log("userId from URL:", userId); // Debug
+
     const fetchUser = async () => {
-      const fetchedUser = await getUser(userId); 
+      const fetchedUser = await getUser(userId);
       setUser(fetchedUser);
-      setUpdatedUser(fetchedUser); // Initialize updatedUser state
+      setUpdatedUser(fetchedUser);
     };
 
-    fetchUser();
+    if (userId) fetchUser();
   }, [userId]);
+
 
   if (!user) {
     return <div>Loading user data...</div>;
@@ -28,41 +33,64 @@ const User = () => {
     const { name, value } = e.target;
     setUpdatedUser((prev) => ({ ...prev, [name]: value })); // Update state for inputs
   };
-
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPreviewImg(URL.createObjectURL(file)); // for preview
+      setUpdatedUser((prev) => ({
+        ...prev,
+        avatar: file, // storing the File object
+      }));
+    }
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await updateUser(userId, updatedUser); // Call updateUser with updated data
-    if (result) {
-      setSuccess(true); // Set success to true if update is successful
+
+    try {
+      // If there's a new file to upload, simulate image upload logic
+      if (updatedUser.avatar && updatedUser.avatar instanceof File) {
+        const formData = new FormData();
+        formData.append('avatar', updatedUser.avatar);
+        // You would POST this to an image upload endpoint
+        // const uploadRes = await axios.post('/upload', formData);
+        // updatedUser.avatar = uploadRes.data.url;
+
+        // For demo purposes:
+        updatedUser.avatar = previewImg;
+      }
+
+      const result = await updateUser(userId, updatedUser);
+      if (result) {
+        setMessage({ type: 'success', text: 'User updated successfully!' });
+      } else {
+        setMessage({ type: 'error', text: 'Update failed. Please try again.' });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Something went wrong during update.' });
     }
   };
+
 
   return (
     <div>
       <div className="user">
-        <div className="userTitleContainer">
-          <h1 className="userTitle">Edit User</h1>
-          <Link to="/newUser">
-            <button className="userAddButton">Create</button>
-          </Link>
-        </div>
         <div className="userContainer">
           <div className="userShow">
             <div className="userShowTop">
               <div className="userShowTopTitle">
                 <span className="userShowUsername">{user.username}</span>
-                <span className="userShowUserTitle">{user.firstName} {user.lastName}</span> 
+                <span className="userShowUserTitle">{user.firstName} {user.lastName}</span>
               </div>
             </div>
             <div className="userShowBottom">
               <span className="userShowTitle">Account Details</span>
               <div className="userShowInfo">
                 <PermIdentity className="userShowIcon" />
-                <span className="userShowInfoTitle">{user.username}</span>
+                <span className="userShowInfoTitle">Username : {user.username}</span>
               </div>
               <div className="userShowInfo">
                 <CalendarToday className="userShowIcon" />
-                <span className="userShowInfoTitle">{new Date(user.createdAt).toLocaleDateString()}</span>
+                <span className="userShowInfoTitle">Created : {new Date(user.createdAt).toLocaleDateString()}</span>
               </div>
               <span className="userShowTitle">Contact Details</span>
               <div className="userShowInfo">
@@ -75,7 +103,7 @@ const User = () => {
               </div>
               <div className="userShowInfo">
                 <LocationSearching className="userShowIcon" />
-                <span className="userShowInfoTitle">{user.address || "Address not provided"}</span>
+                <span className="userShowInfoTitle">{user.industry || "Address not provided"}</span>
               </div>
             </div>
           </div>
@@ -124,11 +152,11 @@ const User = () => {
                   />
                 </div>
                 <div className="userUpdateItem">
-                  <label>Address</label>
+                  <label>Entreprise</label>
                   <input
                     type="text"
-                    name="address" // Add name attribute
-                    value={updatedUser.address || ''} // Set value from updatedUser state
+                    name="Entreprise" // Add name attribute
+                    value={updatedUser.industry || ''} // Set value from updatedUser state
                     onChange={handleInputChange} // Attach onChange
                     className="userUpdateInput"
                   />
@@ -138,18 +166,21 @@ const User = () => {
                 <div className="userUpdateUpload">
                   <img
                     className="userUpdateImg"
-                    src={user.avatar || "https://images.pexels.com/photos/1152994/pexels-photo-1152994.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"}
-                    alt=""
+                    src={previewImg || user.avatar || "https://via.placeholder.com/100?text=Avatar"}
+                    alt="avatar"
                   />
-                  <label htmlFor="file">
-                    <Publish className="userUpdateIcon" />
+                  <label htmlFor="file" className="uploadButton">
+                    Upload Image
                   </label>
-                  <input type="file" id="file" style={{ display: "none" }} />
+                  <input type="file" id="file" style={{ display: "none" }} onChange={handleFileChange} />
                 </div>
+
                 <button type="submit" className="userUpdateButton">Update</button>
               </div>
             </form>
-            {success && <p>User updated successfully!</p>} {/* Display success message */}
+            {message.text && (
+              <p className={`message ${message.type}`}>{message.text}</p>
+            )}
           </div>
         </div>
       </div>

@@ -1,0 +1,29 @@
+.newBrand {
+  padding: 20px;
+}
+
+.newBrandForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 400px;
+}
+
+.newBrandForm input[type="text"] {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.newBrandForm input[type="file"] {
+  padding: 5px;
+}
+
+.newBrandForm button {
+  padding: 10px;
+  background-color: teal;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

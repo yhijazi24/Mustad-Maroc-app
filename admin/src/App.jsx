@@ -1,12 +1,6 @@
-import './App.css'
-import Login from "./pages/Login"
-import Home from "./pages/Home"
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate
-} from "react-router-dom";
+import './App.css';
+import Login from "./pages/Login";
+import Home from "./pages/Home";
 import ProductList from './pages/ProductList';
 import Product from './pages/Product';
 import NewProduct from './pages/NewProduct';
@@ -19,40 +13,58 @@ import Header from './pages/Header';
 import ProductCardList from './pages/ProductCardList';
 import ProductCard from './pages/ProductCard';
 import ProductsPage from './pages/ProductsPage';
+import Brand from './pages/Brand';
+import BrandsList from './pages/BrandsList';
+
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Navigate
+} from "react-router-dom";
+
+import { useSelector } from "react-redux";
+import NewUser from './pages/NewUser';
+import NewHeader from './pages/newHeader';
+import NewProductCard from './pages/NewProductCard';
+import NewBrand from './pages/NewBrand';
 
 function App() {
-  const admin = JSON.parse(JSON.parse(localStorage.getItem("persist:root")).user).currentUser.isAdmin;
-  return (
-    <div>
-      <Router>
-        <Routes>
-          <Route
-            path="/login"
-            element={admin ? <Navigate to="/" /> : <Login />}
-          />
-        </Routes>
-        <Topbar />
-        <div className="container">
-          <Sidebar />
-          <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route exact path='users' element={<UserList />} />
-            <Route exact path='users/:userId' element={<User />} />
-            <Route exact path='/products' element={<ProductsPage />} />
-            <Route exact path='/product/:type' element={<ProductList />} />
-            <Route exact path='/product/:productId' element={<Product />} />
-            <Route exact path='/newproduct' element={<NewProduct />} />
-            <Route exact path='/headers' element={<HeadersList />} />
-            <Route exact path='/header/type/:type' element={<Header />} />
-            <Route exact path='/products-card' element={<ProductCardList />} />
-            <Route exact path='/product-card/:type' element={<ProductCard />} />
-          </Routes>
-        </div>
+    const user = useSelector((state) => state.user.currentUser);
+    const admin = user?.isAdmin;
 
-      </Router>
-    </div>
+    return (
+        <Router>
+            <div className='side-bar'>
 
-  )
+                {admin && <Sidebar />}
+            </div>
+            <div className="container">
+                {admin && <Topbar />}
+                <Routes>
+                    <Route path="/login" element={!admin ? <Login /> : <Navigate to="/" />} />
+                    <Route path="/" element={admin ? <Home /> : <Navigate to="/login" />} />
+                    <Route path="/users" element={admin ? <UserList /> : <Navigate to="/login" />} />
+                    <Route path="/users/:userId" element={admin ? <User /> : <Navigate to="/login" />} />
+                    <Route path="/users/new" element={<NewUser />} />
+                    <Route path="/products" element={admin ? <ProductsPage /> : <Navigate to="/login" />} />
+                    <Route path="/products/:type" element={admin ? <ProductList /> : <Navigate to="/login" />} />
+                    <Route path="/product/:productId" element={admin ? <Product /> : <Navigate to="/login" />} />
+                    <Route path="/newproduct" element={admin ? <NewProduct /> : <Navigate to="/login" />} />
+                    <Route path="/headers" element={admin ? <HeadersList /> : <Navigate to="/login" />} />
+                    <Route path="/header/type/:type" element={admin ? <Header /> : <Navigate to="/login" />} />
+                    <Route path="/header/new" element={<NewHeader />} />
+                    <Route path="/products-card" element={admin ? <ProductCardList /> : <Navigate to="/login" />} />
+                    <Route path="/product-card/:type" element={admin ? <ProductCard /> : <Navigate to="/login" />} />
+                    <Route path="/product-card/new" element={<NewProductCard />} />
+                    <Route path="/brands" element={admin ? <BrandsList /> : <Navigate to="/login" />} />
+                    <Route path="/brands/:brandId" element={<Brand />} />
+                    <Route path="/new-brand" element={<NewBrand />} />
+
+                </Routes>
+            </div>
+        </Router>
+    );
 }
 
-export default App
+export default App;

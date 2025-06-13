@@ -1,69 +1,80 @@
-import React from 'react'
 import './css/sidebar.css'
-import { AttachMoney, BarChartOutlined, ChatBubbleOutline, Dashboard, DashboardOutlined, DesktopMac, DynamicFeed, LineStyle, MailOutline, PermIdentity, Report, Storefront, TabUnselectedOutlined, Timeline, TimelineOutlined, TrendingUp, WorkOutline } from '@mui/icons-material'
-import { Link } from 'react-router-dom'
+import {
+  AttachMoney, ChatBubbleOutline, DashboardOutlined,
+  DynamicFeed, LineStyle, MailOutline, PermIdentity,
+  Storefront, TabUnselectedOutlined
+} from '@mui/icons-material'
+import { Link, useLocation } from 'react-router-dom'
 
 const Sidebar = () => {
+  const location = useLocation();
+  const path = location.pathname;
+
+  const isActive = (targetPath) => path === targetPath;
+
   return (
-    <div>
-      <div className="sidebar">
+    <div className="sidebar">
       <div className="sidebarWrapper">
+        <div className='admin-name'>
+
+          <Link to="/" className="link">
+
+            <h2>Mustad Maroc</h2>
+          </Link>
+        </div>
+
         <div className="sidebarMenu">
           <h3 className="sidebarTitle">Dashboard</h3>
           <ul className="sidebarList">
             <Link to="/" className="link">
-            <li className="sidebarListItem active">
-              <LineStyle className="sidebarIcon" />
-              Home
-            </li>
+              <li className={`sidebarListItem ${isActive('/') ? 'active' : ''}`}>
+                <LineStyle className="sidebarIcon" />
+                Home
+              </li>
             </Link>
-            <li className="sidebarListItem">
-              <TimelineOutlined className="sidebarIcon" />
-              Analytics
-            </li>
-            <li className="sidebarListItem">
-              <TrendingUp className="sidebarIcon" />
-              Sales
-            </li>
           </ul>
         </div>
+
         <div className="sidebarMenu">
           <h3 className="sidebarTitle">Quick Menu</h3>
           <ul className="sidebarList">
             <Link to="/users" className="link">
-              <li className="sidebarListItem">
+              <li className={`sidebarListItem ${isActive('/users') ? 'active' : ''}`}>
                 <PermIdentity className="sidebarIcon" />
                 Users
               </li>
             </Link>
+
             <Link to="/products" className="link">
-              <li className="sidebarListItem">
+              <li className={`sidebarListItem ${isActive('/products') ? 'active' : ''}`}>
                 <Storefront className="sidebarIcon" />
                 Products
               </li>
             </Link>
+
             <Link to="/headers" className="link">
-              <li className="sidebarListItem">
+              <li className={`sidebarListItem ${isActive('/headers') ? 'active' : ''}`}>
                 <TabUnselectedOutlined className="sidebarIcon" />
                 Headers
               </li>
             </Link>
+
             <Link to="/products-card" className="link">
-              <li className="sidebarListItem">
+              <li className={`sidebarListItem ${isActive('/products-card') ? 'active' : ''}`}>
                 <DashboardOutlined className="sidebarIcon" />
                 Product Cards
               </li>
             </Link>
-            <li className="sidebarListItem">
-              <AttachMoney className="sidebarIcon" />
-              Transactions
-            </li>
-            <li className="sidebarListItem">
-              <BarChartOutlined className="sidebarIcon" />
-              Reports
-            </li>
+
+            <Link to="/brands" className="link">
+              <li className={`sidebarListItem ${isActive('/brands') ? 'active' : ''}`}>
+                <AttachMoney className="sidebarIcon" />
+                Brands
+              </li>
+            </Link>
           </ul>
         </div>
+
         <div className="sidebarMenu">
           <h3 className="sidebarTitle">Notifications</h3>
           <ul className="sidebarList">
@@ -81,27 +92,9 @@ const Sidebar = () => {
             </li>
           </ul>
         </div>
-        <div className="sidebarMenu">
-          <h3 className="sidebarTitle">Staff</h3>
-          <ul className="sidebarList">
-            <li className="sidebarListItem">
-              <WorkOutline className="sidebarIcon" />
-              Manage
-            </li>
-            <li className="sidebarListItem">
-              <Timeline className="sidebarIcon" />
-              Analytics
-            </li>
-            <li className="sidebarListItem">
-              <Report className="sidebarIcon" />
-              Reports
-            </li>
-          </ul>
-        </div>
       </div>
-    </div>
     </div>
   )
 }
 
-export default Sidebar
+export default Sidebar;

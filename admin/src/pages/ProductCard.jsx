@@ -1,45 +1,35 @@
-import React, { useEffect, useState } from 'react'
-import './css/productCard.css'
+import React, { useEffect, useState } from 'react';
+import './css/productCard.css';
 import { getOneProductCard, updateProductCard } from '../redux/apiCalls';
 import { useDispatch } from 'react-redux';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 import app from "../firebase";
 import { useParams } from 'react-router-dom';
-import { Publish } from '@mui/icons-material';
-
+import { Publish, Delete } from '@mui/icons-material';
 
 const ProductCard = () => {
   const dispatch = useDispatch();
   const { type } = useParams();
   const [productCard, setProductCard] = useState(null);
-  const [updatedProductCard, setUpdatedProductCard] = useState({}); 
-  const [success, setSuccess] = useState(false); 
+  const [updatedProductCard, setUpdatedProductCard] = useState({});
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [file, setFile] = useState(null);
   const [fetchedProductCardId, setFetchedProductCardId] = useState(null);
 
   useEffect(() => {
     const fetchProductCard = async () => {
-      setLoading(true);
       try {
         const fetchedProductCard = await getOneProductCard(type);
-        console.log("Fetched Product Card:", fetchedProductCard);
         setProductCard(fetchedProductCard);
         setUpdatedProductCard(fetchedProductCard);
-        setFetchedProductCardId(fetchedProductCard._id);
+        setFetchedProductCardId(fetchedProductCard.id);
       } catch (err) {
         setError("Failed to fetch Product Card.");
-      } finally {
-        setLoading(false);
-      } 
+      }
     };
     fetchProductCard();
   }, [type]);
-
-  if (loading) {
-    return <div>Loading product card data...</div>;
-  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -50,122 +40,141 @@ const ProductCard = () => {
     setFile(e.target.files[0]);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const storage = getStorage(app);
+  const handleDeleteImage = async () => {
+    if (!productCard?.img?.includes("firebasestorage")) return;
 
     try {
+      const imgRef = ref(getStorage(app), productCard.img);
+      await deleteObject(imgRef);
+      setUpdatedProductCard((prev) => ({ ...prev, img: "" }));
+      setProductCard((prev) => ({ ...prev, img: "" }));
+    } catch {
+      setError("Failed to delete image.");
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      let imageUrl = updatedProductCard.img;
+
       if (file) {
         const fileName = new Date().getTime() + file.name;
-        const storageRef = ref(storage, fileName);
+        const storageRef = ref(getStorage(app), fileName);
         const uploadTask = uploadBytesResumable(storageRef, file);
 
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log("Upload is " + progress + "% done");
-          },
-          (error) => {
-            console.error("File upload failed:", error);
-            setError("File upload failed.");
-          },
-          async () => {
-            try {
-              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-              const productCardToUpdate = { ...updatedProductCard, img: downloadURL };
-              await updateProductCard(fetchedProductCardId, productCardToUpdate, dispatch); 
-              setSuccess(true);
-            } catch (error) {
-              console.error("Failed to get download URL:", error);
-              setError("Failed to retrieve image URL.");
+        await new Promise((resolve, reject) => {
+          uploadTask.on(
+            "state_changed",
+            null,
+            (error) => reject(error),
+            async () => {
+              imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+              resolve();
             }
-          }
-        );
-      } else {
-        await updateProductCard(fetchedProductCardId, updatedProductCard, dispatch); 
-        setSuccess(true);
+          );
+        });
       }
-    } catch (updateError) {
-      console.error("Update failed:", updateError);
+
+      const updatedData = {
+        ...updatedProductCard,
+        img: imageUrl,
+      };
+
+      await updateProductCard(fetchedProductCardId, updatedData, dispatch);
+      setProductCard(updatedData);
+      setSuccess(true);
+    } catch (err) {
       setError("Product Card update failed.");
     }
   };
+
+  if (!productCard) return <div>Loading product card...</div>;
+
   return (
-    <div className="productCard">
-    <div className="productCardTitleContainer">
-      <h1 className="productCardTitle">Edit Product Card</h1>
-    </div>
-    <div className="productCardContainer">
-      <div className="productCardShow">
-        <div className="productCardShowTop">
-          <img
-            src={productCard.img || "https://via.placeholder.com/150"}
-            alt={productCard.title || "Default Title"}
-            className="productCardShowImg"
-          />
-          <div className="productCardShowTopTitle">
-            <span className="productCardShowTitle">{productCard.title || "Default Title"}</span>
-            <span className="productCardShowType">{productCard.type || "Default Type"}</span>
+    <div className=" user">
+      <div className="userContainer">
+        <div className="userShow">
+
+          <span className="userShowTitle">Card Details</span>
+          <div className='div-img'>
+            <img
+              src={productCard.img || "https://via.placeholder.com/150"}
+              alt="Preview"
+              className="brandUpdateImg"
+            />
+          </div>
+
+          <div className='pcInfo'>
+            <div className="userShowInfoTitle"><strong>Title:</strong> {productCard.title}</div>
+            <div className="userShowInfoTitle"><strong>Type:</strong> {productCard.type}</div>
           </div>
         </div>
-      </div>
-      <div className="productCardUpdate">
-        <span className="productCardUpdateTitle">Edit</span>
-        <form className="productCardUpdateForm" onSubmit={handleSubmit}>
-          <div className="productCardUpdateLeft">
-            <div className="productCardUpdateItem">
-              <label>Type</label>
-              <input
-                type="text"
-                name="type"
-                value={updatedProductCard.type || ''}
-                onChange={handleInputChange}
-                className="productCardUpdateInput"
-              />
+
+        {/* RIGHT SIDE: EDIT FORM */}
+        <div className="userUpdate">
+          <span className="userUpdateTitle">Edit Product Card</span>
+          <form className="userUpdateForm" onSubmit={handleSubmit}>
+            <div className='userUpdateLeft'>
+              <div className="userUpdateItem">
+                <label>Full Name</label>
+                <input
+                  type="text"
+                  name="title"
+                  value={updatedProductCard.title || ""}
+                  onChange={handleInputChange}
+                  placeholder="Title"
+                  className="userUpdateInput"
+                />
+              </div>
+              <div className="userUpdateItem">
+                <label>Full Name</label>
+                <input
+                  type="text"
+                  name="type"
+                  value={updatedProductCard.type || ""}
+                  onChange={handleInputChange}
+                  placeholder="Type"
+                  className="userUpdateInput"
+                />
+              </div>
             </div>
-            <div className="productCardUpdateItem">
-              <label>Title</label>
-              <input
-                type="text"
-                name="title"
-                value={updatedProductCard.title || ''}
-                onChange={handleInputChange}
-                className="productCardUpdateInput"
-              />
-            </div>
-            <div className="productCardUpdateItem">
-              <label>Image URL</label>
-              <input
-                type="text"
-                name="img"
-                value={updatedProductCard.img || ''}
-                onChange={handleInputChange}
-                className="productCardUpdateInput"
-              />
-            </div>
-          </div>
-          <div className="productCardUpdateRight">
-            <div className="productCardUpdateUpload">
+            <div className="userUpdateRight">
               <img
-                className="productCardUpdateImg"
-                src={productCard.img || "https://via.placeholder.com/150"}
-                alt="productCard Preview"
+                src={updatedProductCard.img || "https://via.placeholder.com/150"}
+                alt="Edit Preview"
+                className="brandUpdateImg"
               />
-              <label htmlFor="file">
-                <Publish className="productCardUpdateIcon" />
+              <button
+                type="button"
+                onClick={handleDeleteImage}
+                className="uploadButton"
+              >Delete Image
+              </button>
+
+              <label htmlFor="file" className="uploadButton">
+          Upload Image
               </label>
-              <input type="file" id="file" style={{ display: "none" }} onChange={handleFileChange} />
+              <input
+                type="file"
+                id="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handleFileChange}
+              />
+
+              <button type="submit" className="userUpdateButton">
+                Update
+              </button>
+              {success && <p className="message success">Product Card updated successfully!</p>}
+              {error && <p className="message error">{error}</p>}
             </div>
-            <button type="submit" className="productCardUpdateButton">Update</button>
-          </div>
-        </form>
-        {success && <p className="successMessage">Header updated successfully!</p>}
-        {error && <p className="errorMessage">{error}</p>}
+          </form>
+        </div>
       </div>
     </div>
-  </div>
-  )
-}
+  );
+};
 
-export default ProductCard
+export default ProductCard;

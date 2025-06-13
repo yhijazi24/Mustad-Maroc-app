@@ -1,0 +1,73 @@
+.actionPage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+}
+
+.actionsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 20px;
+}
+
+.aw1 {
+  flex: 2;
+  margin-right: 20px;
+
+}
+
+.aw2 {
+  flex: 1;
+}
+
+.actionWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  padding: 20px;
+}
+
+.actionTitle {
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  margin-top: 0;
+}
+
+.actionCard {
+  background-color: #ffffff;
+  border-radius: 10px;
+  width: 100px;
+  height: 120px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 34, 0.15);
+  text-decoration: none;
+  color: #000022;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  padding: 20px;
+}
+
+.actionCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 34, 0.25);
+  background-color: #e8ebf4;
+}
+
+.actionCardImg {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 20px;
+  object-fit: contain;
+}
+
+.actionCardTitle {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-align: center;
+}

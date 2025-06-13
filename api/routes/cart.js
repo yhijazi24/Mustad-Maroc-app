@@ -1,66 +1,70 @@
-const   Cart = require("../models/Cart");
+const Cart = require("../models/Cart");
 const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } = require("./verifyToken");
-
 const router = require("express").Router();
 
-//Create
-
+// CREATE Cart
 router.post("/", verifyToken, async (req, res) => {
-    const newCart = new Cart(req.body)
-
-    try {
-        const savedCart = await newCart.save();
-        res.status(200).json(savedCart);
-    } catch (err) {
-        res.status(500).json(err);
-    }
+  try {
+    const newCart = await Cart.create(req.body);
+    res.status(200).json(newCart);
+  } catch (err) {
+    console.error("Cart POST error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
-
-//Update
+// UPDATE Cart
 router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
+  try {
+    await Cart.update(req.body, {
+      where: { id: req.params.id }
+    });
 
-    try {
-        const updatedCart = await Cart.findByIdAndUpdate(req.params.id, {
-            $set: req.body,
-        }, { new: true });
-        res.status(200).json(updatedCart);
-    } catch (err) {
-        res.status(500).json(err);
-    }
+    const updatedCart = await Cart.findByPk(req.params.id);
+    if (!updatedCart) return res.status(404).json({ message: "Cart not found" });
+
+    res.status(200).json(updatedCart);
+  } catch (err) {
+    console.error("Cart PUT error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
-//Delete
-
+// DELETE Cart
 router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
-    try {
-        await Cart.findByIdAndDelete(req.params.id)
-        res.status(200).json("Product has been deleted...")
-    } catch (err) {
-        res.status(500).json(err);
-    }
-})
+  try {
+    const deleted = await Cart.destroy({ where: { id: req.params.id } });
+    if (!deleted) return res.status(404).json({ message: "Cart not found" });
 
-//Get User Cart
-
-router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
-    try {
-        const cart = await Cart.findById({ userId: req.params.userId });
-        res.status(200).json(cart);
-    } catch (err) {
-        res.status(500).json(err);
-    }
-})
-
-// Get All
-
-router.get("/", verifyTokenAndAdmin, async (req, res) => {
-    try {
-        const carts = await Cart.find();
-        res.status.json(carts);
-    } catch (err) {
-        res.status(500).json(err);
-    }
+    res.status(200).json("Cart has been deleted...");
+  } catch (err) {
+    console.error("Cart DELETE error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
-module.exports = router
+// GET User Cart by userId
+router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
+  try {
+    const cart = await Cart.findOne({ where: { userId: req.params.userId } });
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
+
+    res.status(200).json(cart);
+  } catch (err) {
+    console.error("Cart GET user error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// GET All Carts (Admin only)
+router.get("/", verifyTokenAndAdmin, async (req, res) => {
+  try {
+    const carts = await Cart.findAll();
+    res.status(200).json(carts);
+  } catch (err) {
+    console.error("Cart GET all error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+module.exports = router;

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import './css/widgetSm.css'
-import {userRequest} from '../../requestMethods'
+import { userRequest } from '../../requestMethods'
 import { Visibility } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 
 const WidgetSm = () => {
@@ -12,32 +13,36 @@ const WidgetSm = () => {
       try {
         const res = await userRequest.get("users/?new=true");
         setUsers(res.data);
-      } catch {}
+      } catch { }
     };
     getUsers();
   }, []);
 
+
   return (
     <div className="widgetSm">
-      <span className="widgetSmTitle">New Join Members</span>
+      <span className="widgetSmTitle">New Members</span>
       <ul className="widgetSmList">
         {users.map((user) => (
           <li className="widgetSmListItem" key={user._id}>
-            <img
-              src={
-                user.img ||
-                "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"
-              }
-              alt=""
-              className="widgetSmImg"
-            />
-            <div className="widgetSmUser">
-              <span className="widgetSmUsername">{user.username}</span>
+            <div className='widgetSmUserContainer'>
+              <img
+                src={
+                  user.avatar ||
+                  "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"
+                }
+                alt=""
+                className="widgetSmImg"
+              />
+              <div className="widgetSmUser">
+                <span className="widgetSmUsername">{user.username}</span>
+              </div>
             </div>
-            <button className="widgetSmButton">
+            <Link to={"/users/" + user.id} className="widgetSmButton">
               <Visibility className="widgetSmIcon" />
               Display
-            </button>
+            </Link>
+
           </li>
         ))}
       </ul>

@@ -1,183 +1,187 @@
-import React from 'react'
-import './css/newProduct.css'
-import { useState } from "react";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
+import React, { useState } from 'react';
+import './css/user.css';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import app from "../firebase";
-import { addProduct } from "../redux/apiCalls";
 import { useDispatch } from "react-redux";
-
+import { addProduct } from "../redux/apiCalls";
 
 const NewProduct = () => {
-  const [inputs, setInputs] = useState({});
-  const [file, setFile] = useState(null);
-  const [cat, setCat] = useState([]);
   const dispatch = useDispatch();
+  const [inputs, setInputs] = useState({
+    title: "",
+    desc: "",
+    fullDesc: "",
+    type: "",
+    size: "",
+    wheather: "",
+    terrain: "",
+    availability: "",
+    activity: "",
+    price: ""
+  });
+  const [images, setImages] = useState([]);
+  const [uploadedURLs, setUploadedURLs] = useState([]);
+  const [message, setMessage] = useState({ type: "", text: "" });
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e) => {
-    setInputs((prev) => {
-      return { ...prev, [e.target.name]: e.target.value };
+    const { name, value } = e.target;
+    setInputs(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    setImages(files);
+
+    files.forEach((file) => {
+      const fileName = new Date().getTime() + file.name;
+      const storage = getStorage(app);
+      const storageRef = ref(storage, `products/${fileName}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        null,
+        (error) => {
+          console.error("Upload failed:", error);
+          setMessage({ type: "error", text: "Image upload failed." });
+        },
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          setUploadedURLs((prev) => [...prev, downloadURL]);
+        }
+      );
     });
   };
-  const handleCat = (e) => {
-    setCat(e.target.value.split(","));
-  };
 
-  const handleClick = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const fileName = new Date().getTime() + file.name;
-    const storage = getStorage(app);
-    const storageRef = ref(storage, fileName);
-    const uploadTask = uploadBytesResumable(storageRef, file);
 
-    // Register three observers:
-    // 1. 'state_changed' observer, called any time the state changes
-    // 2. Error observer, called on failure
-    // 3. Completion observer, called on successful completion
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // Observe state change events such as progress, pause, and resume
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-          default:
-        }
-      },
-      (error) => {
-        // Handle unsuccessful uploads
-      },
-      () => {
-        // Handle successful uploads on complete
-        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          const product = { ...inputs, img: downloadURL, categories: cat };
-          addProduct(product, dispatch);
-        });
-      }
-    );
+    if (uploadedURLs.length === 0) {
+      setMessage({ type: "error", text: "Please upload at least one image." });
+      return;
+    }
+
+    try {
+      const finalData = {
+        ...inputs,
+        img: uploadedURLs,
+        size: inputs.size.split(',').map(s => s.trim()),
+        wheather: inputs.wheather.split(',').map(s => s.trim()),
+        terrain: inputs.terrain.split(',').map(s => s.trim()),
+        activity: inputs.activity.split(',').map(s => s.trim()),
+      };
+
+      await addProduct(finalData, dispatch);
+      setMessage({ type: "success", text: "Product created successfully!" });
+      setSuccess(true);
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } catch (err) {
+      console.error(err);
+      setMessage({ type: "error", text: "Error creating product. Check all fields." });
+    }
   };
-  return (
-    <div className="newProduct">
-      <h1 className="addProductTitle">New Product</h1>
-      <form className="addProductForm">
-        <div className="addProductItem">
-          <label>Image</label>
-          <input
-          name='img'
-            type="file"
-            id="file"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
-        </div>
-        <div className="addProductItem">
-          <label>Title</label>
-          <input
-            name="title"
-            type="text"
-            placeholder="Apple Airpods"
-            onChange={handleChange}
-          />
-        </div>
-        <div className="addProductItem">
-          <label>Description</label>
-          <input
-            name="desc"
-            type="text"
-            placeholder="description..."
-            onChange={handleChange}
-          />
-        </div>
-        <div className="addProductItem">
-          <label>full Description</label>
-          <input
-            name="fullDesc"
-            type="text"
-            placeholder="description..."
-            onChange={handleChange}
-          />
-        </div>
-        <div className="addProductItem">
-          <label>type</label>
-          <input
-            name="type"
-            type="text"
-            placeholder="description..."
-            onChange={handleChange}
-          />
-        </div>
-        <div className="addProductItem">
-          <label>size</label>
-          <input
-            name="size"
-            type="text"
-            placeholder="description..."
-            onChange={handleChange}
-          />
-        </div>
-        <div className="addProductItem">
-          <label>wheather</label>
-          <input
-            name="wheather"
-            type="text"
-            placeholder="description..."
-            onChange={handleChange}
-          />
-        </div>
-        <div className="addProductItem">
-          <label>terrain</label>
-          <input
-            name="terrain"
-            type="text"
-            placeholder="description..."
-            onChange={handleChange}
-          />
-        </div>
-        <div className="addProductItem">
-          <label>availability</label>
-          <input
-            name="availability"
-            type="text"
-            placeholder="description..."
-            onChange={handleChange}
-          />
-        </div>
-        <div className="addProductItem">
-          <label>activity</label>
-          <input
-            name="activity"
-            type="text"
-            placeholder="description..."
-            onChange={handleChange}
-          />
-        </div>
-        <div className="addProductItem">
-          <label>Price</label>
-          <input
-            name="price"
-            type="number"
-            placeholder="100"
-            onChange={handleChange}
-          />
-        </div>
-        <button onClick={handleClick} className="addProductButton">
-          Create
-        </button>
-      </form>
-    </div>
-  )
-}
 
-export default NewProduct
+  return (
+    <div className="user">
+      <div className="userContainer">
+        <div className="userShow">
+          <span className="userShowTitle">Uploaded Images</span>
+          <div className="productUploadGallery">
+            {uploadedURLs.map((url, idx) => (
+              <div key={idx} className="productImageContainer">
+                <img src={url} alt={`preview-${idx}`} className="userUpdateImg" />
+                <button
+                  type="button"
+                  onClick={() =>
+                    setUploadedURLs((prev) => prev.filter((img) => img !== url))
+                  }
+                  className="deleteImageButton"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
+          </div>
+
+        </div>
+        <div className="userUpdate">
+          <span className="userUpdateTitle">New Product</span>
+          <form className="userUpdateForm" onSubmit={handleSubmit}>
+            <div className="newUserUpdateLeft">
+              {[
+                ["title", "Title"],
+                ["desc", "Description"],
+                ["fullDesc", "Full Description"],
+                ["type", "Type"],
+                ["size", "Size (comma-separated)"],
+                ["wheather", "Weather (comma-separated)"],
+                ["terrain", "Terrain (comma-separated)"],
+                ["availability", "Availability"],
+                ["activity", "Activity (comma-separated)"],
+                ["price", "Price"],
+              ].map(([name, label]) => (
+                <div className="userUpdateItem" key={name}>
+                  <label>{label}</label>
+
+                  {name === "type" ? (
+                    <select
+                      name="type"
+                      value={inputs.type}
+                      onChange={handleChange}
+                      className="userUpdateInput"
+                    >
+                      <option value="">Select Type</option>
+                      <option value="horseshoes">Horseshoes</option>
+                      <option value="nails">Nails</option>
+                      <option value="rasps">Rasps</option>
+                      <option value="tools">Tools</option>
+                      <option value="care">Care</option>
+                    </select>
+                  ) : name === "desc" || name === "fullDesc" ? (
+                    <textarea
+                      name={name}
+                      value={inputs[name]}
+                      onChange={handleChange}
+                      className={`userUpdateInput ${name === "fullDesc" ? 'large-textarea' : ''}`}
+                    />
+                  ) : (
+                    <input
+                      type={name === "price" ? "number" : "text"}
+                      name={name}
+                      value={inputs[name]}
+                      onChange={handleChange}
+                      className="userUpdateInput"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="userUpdateRight">
+              <div className="userUpdateUpload">
+                <label htmlFor="file" className="uploadButton">Upload Images</label>
+                <input
+                  type="file"
+                  id="file"
+                  accept="image/*"
+                  multiple
+                  style={{ display: "none" }}
+                  onChange={handleFileChange}
+                />
+
+              </div>
+              <button className="userUpdateButton" type="submit">Create</button>
+              {message.text && (
+                <p className={`message ${message.type}`}>{message.text}</p>
+              )}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default NewProduct;

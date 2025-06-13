@@ -30,16 +30,22 @@
 }
 
 .headerShowTop {
-    display: flex;
+    display: flex
+;
     align-items: center;
+    flex-direction: column;
+    gap: 20px;
 }
-
+.headerShowTitle{
+        font-size: 25px;
+    font-weight: 600;
+    letter-spacing: 2px;
+}
 .headerShowImg {
-    width: 150px;
-    height: 150px;
+    width: 500px;
+    height: auto;
     border-radius: 10px;
     object-fit: cover;
-    margin-right: 20px;
 }
 
 .headerShowTopTitle {
@@ -67,4 +73,29 @@
 
 .headerUpdateLeft {
     flex: 1;
+}
+
+
+.successMessage {
+  color: green;
+  margin-top: 10px;
+}
+
+.errorMessage {
+  color: red;
+  margin-top: 10px;
+}
+
+.headerUpdateImg{
+    width: 480px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.headerUpdateRight{
+gap: 20px;
+} 
+.headerUpdateUpload{
+    margin-left: 0;
 }

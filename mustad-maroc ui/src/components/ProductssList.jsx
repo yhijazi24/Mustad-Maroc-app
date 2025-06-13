@@ -1,20 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import "./css/productsslist.css";
-import { filterOptions, headerProducts, productLists } from '../..';
 import { useLocation } from 'react-router-dom';
 import axios from "axios";
 
 const ProductssList = () => {
-  const options = filterOptions[0];
-  const activity = options.Activity;
-  const terrains = options.Terrain;
-
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 6;
 
   const location = useLocation();
   const type = location.pathname.split("/")[2];
   const [filters, setFilters] = useState({});
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [header, setHeader] = useState({});
+  const [activities, setActivities] = useState([]);
+  const [terrains, setTerrains] = useState([]);
+  const [availabilities, setAvailabilities] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value.toLowerCase());
+  };
 
   const handleFilters = (e) => {
     const { name, value } = e.target;
@@ -23,20 +29,34 @@ const ProductssList = () => {
       [name]: value,
     }));
   };
-
   const handleResetFilters = () => {
     setFilters({});
+    setSearchTerm("");
   };
 
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/products?type=${type}`);
-        console.log(res);
-        setProducts(res.data);
+        const res = await axios.get(`http://localhost:5000/products/${type}`);
+
+        const data = res.data;
+        setProducts(data);
+
+        // Extract unique values for filters
+        const act = new Set();
+        const terr = new Set();
+        const avail = new Set();
+
+        data.forEach((item) => {
+          item.activity?.forEach((a) => act.add(a));
+          item.terrain?.forEach((t) => terr.add(t));
+          if (item.availability) avail.add(item.availability);
+        });
+
+        setActivities(Array.from(act));
+        setTerrains(Array.from(terr));
+        setAvailabilities(Array.from(avail));
       } catch (err) {
         console.error(err);
       }
@@ -45,18 +65,30 @@ const ProductssList = () => {
   }, [type]);
 
   useEffect(() => {
-    if (Array.isArray(products) && type) {
-      setFilteredProducts(
-        products.filter(item =>
-          Object.entries(filters).every(([key, value]) =>
-            item[key] && (Array.isArray(item[key]) ? item[key].includes(value) : item[key] === value)
-          )
-        )
-      );
-    } else {
-      setFilteredProducts(products);
-    }
-  }, [products, type, filters]);
+    const filtered = products.filter(item =>
+      // Match all filter types
+      (!filters.activity || filters.activity.length === 0 || filters.activity.some(a => item.activity?.includes(a))) &&
+      (!filters.terrain || filters.terrain.length === 0 || filters.terrain.includes(item.terrain)) &&
+      (!filters.availability || filters.availability.length === 0 || filters.availability.includes(item.availability)) &&
+      item.title.toLowerCase().includes(searchTerm)
+    );
+    setFilteredProducts(filtered);
+  }, [products, filters, searchTerm]);
+
+
+
+
+  useEffect(() => {
+    const getHeader = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5000/header/type/${type}`);
+        setHeader(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    getHeader();
+  }, [type]);
 
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
   const currentProducts = filteredProducts.slice(
@@ -68,56 +100,120 @@ const ProductssList = () => {
     setCurrentPage(pageNumber);
   };
 
-  const [header, setHeader] = useState({});
-
-  useEffect(() => {
-    const getHeader = async () => {
-      try {
-        const res = await axios.get(`http://localhost:5000/header?type=${type}`);
-        setHeader(res.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    getHeader();
-  }, [type]);
-
   return (
     <div className='list-container'>
-        <div key={header.id} className='list-header'>
-          <img src={header.img} className='list-header-img' alt='item image' />
-          <h1 className='list-title'>{header.title}</h1>
-        </div>
+      <div key={header.id} className='list-header'>
+        <img src={header.img} className='list-header-img' alt='item image' />
+        <h1 className='list-title'>{header.title}</h1>
+      </div>
 
       <div className='list-filter'>
-        <div className='filter-group'>
-          <select id='activity' name='activity' className='filter' onChange={handleFilters} value={filters.activity || ''}>
-            <option value='' className='filter-option'>Activity</option>
-            {activity.map(option => (
-              <option className='filter-option' key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
+        <div className="filter-group search-bar-wrapper">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="search-button reset-filters dropdown-toggle"
+          />
+        </div>
+        {/* Activity Filter */}
+        <div className="filter-group">
+          <div className="dropdown">
+            <button type="button" className="reset-filters dropdown-toggle">
+              Select Activities
+            </button>
+            <div className="dropdown-menu">
+              {activities.map(option => (
+                <label key={option} className="dropdown-item">
+                  <input
+                    type="checkbox"
+                    value={option}
+                    checked={filters.activity?.includes(option)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setFilters(prev => {
+                        const prevActivity = prev.activity || [];
+                        return {
+                          ...prev,
+                          activity: e.target.checked
+                            ? [...prevActivity, value]
+                            : prevActivity.filter(a => a !== value)
+                        };
+                      });
+                    }}
+                  />
+                  {option}
+                </label>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className='filter-group'>
-          <select id='terrain' name='terrain' className='filter' onChange={handleFilters} value={filters.terrain || ''}>
-            <option value='' className='filter-option'>Terrain</option>
-            {terrains.map(option => (
-              <option className='filter-option' key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
+        {/* Terrain Filter */}
+        <div className="filter-group">
+          <div className="dropdown">
+            <button type="button" className="reset-filters dropdown-toggle">
+              Select Terrains
+            </button>
+            <div className="dropdown-menu">
+              {terrains.map(option => (
+                <label key={option} className="dropdown-item">
+                  <input
+                    type="checkbox"
+                    value={option}
+                    checked={filters.terrain?.includes(option)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setFilters(prev => {
+                        const prevTerrain = prev.terrain || [];
+                        return {
+                          ...prev,
+                          terrain: e.target.checked
+                            ? [...prevTerrain, value]
+                            : prevTerrain.filter(t => t !== value)
+                        };
+                      });
+                    }}
+                  />
+                  {option}
+                </label>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className='filter-group'>
-          <select id='availability' name='availability' className='filter' onChange={handleFilters} value={filters.availability || ''}>
-            <option className='filter-option' value='' >Availability</option>
-            <option className='filter-option' value='available'>Available</option>
-            <option className='filter-option' value='out-of-stock'>Out of Stock</option>
-          </select>
+        {/* Availability Filter */}
+        <div className="filter-group">
+          <div className="dropdown">
+            <button type="button" className="reset-filters dropdown-toggle">
+              Select Availability
+            </button>
+            <div className="dropdown-menu">
+              {availabilities.map(option => (
+                <label key={option} className="dropdown-item">
+                  <input
+                    type="checkbox"
+                    value={option}
+                    checked={filters.availability?.includes(option)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setFilters(prev => {
+                        const prevAvail = prev.availability || [];
+                        return {
+                          ...prev,
+                          availability: e.target.checked
+                            ? [...prevAvail, value]
+                            : prevAvail.filter(a => a !== value)
+                        };
+                      });
+                    }}
+                  />
+                  {option}
+                </label>
+              ))}
+            </div>
+          </div>
         </div>
 
         <button className='reset-filters' onClick={handleResetFilters}>Reset Filters</button>
@@ -125,7 +221,7 @@ const ProductssList = () => {
 
       <div className='list-products'>
         {currentProducts.map(item => (
-          <a href={`/product/${item._id}`} className='list-product' key={item.id}>
+          <a href={`/product/${item.id}`} className='list-product' key={item.id}>
             <div className='list-product-img'>
               <img src={item.img} className='product-img' alt='product image' />
             </div>
@@ -140,23 +236,30 @@ const ProductssList = () => {
               <div className='product-info-filter'>
                 <p className='product-info-terrain'>
                   <span className='filter-title'>Terrain: </span>
-                  {item.terrain.map((terrain, index) => (
-                    <span key={index}>
-                      {terrain}
-                      {index < item.terrain.length - 1 && " | "}
-                    </span>
-                  ))}
+                  {(Array.isArray(item.terrain) ? item.terrain : [item.terrain])
+                    .filter(Boolean)
+                    .map((terrain, index, arr) => (
+                      <span key={index}>
+                        {terrain}
+                        {index < arr.length - 1 && " | "}
+                      </span>
+                    ))}
                 </p>
+
                 <p className='product-info-activity'>
                   <span className='filter-title'>Activity: </span>
-                  {item.activity.slice(0, 5).map((activity, index) => (
-                    <span key={index}>
-                      {activity}
-                      {index < 4 && " | "}
-                    </span>
-                  ))}
-                  {item.activity.length > 5 && <span>...</span>}
+                  {(Array.isArray(item.activity) ? item.activity : [item.activity])
+                    .filter(Boolean)
+                    .slice(0, 5)
+                    .map((activity, index, arr) => (
+                      <span key={index}>
+                        {activity}
+                        {index < arr.length - 1 && " | "}
+                      </span>
+                    ))}
+                  {Array.isArray(item.activity) && item.activity.length > 5 && <span>...</span>}
                 </p>
+
               </div>
             </div>
           </a>

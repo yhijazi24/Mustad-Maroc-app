@@ -1,25 +1,31 @@
 import axios from 'axios';
 
 const BASE_URL = "http://localhost:5000/";
-const TOKEN = JSON.parse(JSON.parse(localStorage.getItem("persist:root")).user).currentUser.accessToken;
+
+const getAccessToken = () => {
+  try {
+    const persistRoot = JSON.parse(localStorage.getItem("persist:root"));
+    const user = persistRoot && JSON.parse(persistRoot.user);
+    return user?.currentUser?.accessToken;
+  } catch (error) {
+    console.error("Failed to extract token:", error);
+    return null;
+  }
+};
 
 export const publicRequest = axios.create({
-    baseURL: BASE_URL,
+  baseURL: BASE_URL,
 });
 
 export const userRequest = axios.create({
-    baseURL: BASE_URL,
-    headers:{token:`Bearer ${TOKEN}`},
+  baseURL: BASE_URL,
 });
 
-publicRequest.interceptors.response.use(
-    response => {
-        console.log('Response:', response);
-        return response;
-    },
-    error => {
-        console.error('Error Response:', error);
-        return Promise.reject(error);
-    }
-);
-
+// ✅ Dynamically inject token into headers before every request
+userRequest.interceptors.request.use((config) => {
+  const token = getAccessToken();
+  if (token) {
+    config.headers.token = `Bearer ${token}`;
+  }
+  return config;
+});

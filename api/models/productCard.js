@@ -1,12 +1,23 @@
-const mongoose = require("mongoose");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../sequelize');
 
-const ProductCardSchema = new mongoose.Schema(
-    {
-        type: {type: String, required: true, unique: true},
-        title: { type: String, required: true, unique: true },
-        img: { type: String, required: true },
-    },
-    { timestamps: true },
-)
+const ProductCard = sequelize.define('ProductCard', {
+  type: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
+  },
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
+  },
+  img: {
+    type: DataTypes.STRING,
+    allowNull: false
+  }
+}, {
+  timestamps: true
+});
 
-module.exports = mongoose.model('ProductCard', ProductCardSchema)
+module.exports = ProductCard;

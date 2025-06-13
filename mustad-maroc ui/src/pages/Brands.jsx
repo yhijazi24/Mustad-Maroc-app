@@ -1,12 +1,28 @@
-import React from 'react'
 import "./css/brands.css"
 import Navbar from '../components/Navbar'
 import Maps from '../components/Maps'
 import Footer from '../components/Footer'
-import { brandsList } from '../..'
+import { useEffect } from "react"
+import { useState } from "react"
+import { publicRequest } from "../../requestMethods"
 
 
 const Brands = () => {
+
+  const [brands, setBrands] = useState([]);
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const res = await publicRequest.get("/brands");
+        setBrands(res.data);
+      } catch (err) {
+        console.error("Failed to fetch brands:", err);
+      }
+    };
+    fetchBrands();
+  }, []);
+
   return (
     <div>
       <Navbar />
@@ -17,7 +33,7 @@ const Brands = () => {
           </div>
 
           <div className='brands-list-content'>
-            {brandsList.map(item => (
+            {brands.map(item => (
               <div key={item.id} className='brand'>
                 {item.website ? (
                   <a href={item.website} className='brands-content-link'>

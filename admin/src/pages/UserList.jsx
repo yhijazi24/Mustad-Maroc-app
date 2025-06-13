@@ -21,7 +21,7 @@ const UserList = () => {
   const handleDelete = async (id) => {
     try {
       await deleteUser(id); // Pass the correct user ID
-      setData(data.filter((item) => item._id !== id)); // Update state to remove user from the UI
+      setData(data.filter((item) => item.id !== id)); // Update state to remove user from the UI
     } catch (err) {
       console.error("Error deleting user:", err);
       // You can set an error state here if needed
@@ -55,19 +55,29 @@ const UserList = () => {
       width: 160,
     },
     {
-      field: "action",
-      headerName: "Action",
+      field: "edit",
+      headerName: "Edit User",
       width: 150,
       renderCell: (params) => {
         return (
           <>
-            <Link to={"/users/" + params.row._id}> 
+            <Link to={"/users/" + params.row.id}>
               <button className="userListEdit">Edit</button>
             </Link>
-            <DeleteOutline
-              className="userListDelete"
-              onClick={() => handleDelete(params.row._id)} // Pass _id to handleDelete
-            />
+          </>
+        );
+      },
+    },
+    {
+      field: "delete",
+      headerName: "Delete User",
+      width: 150,
+      renderCell: (params) => {
+        return (
+          <>
+            <button className="userListEdit"
+              onClick={() => handleDelete(params.row.id)} >Delete</button>
+
           </>
         );
       },
@@ -75,15 +85,20 @@ const UserList = () => {
   ];
 
   return (
-    <div className="userList">
-      <DataGrid
-        rows={data}
-        getRowId={(row) => row._id} 
-        disableSelectionOnClick
-        columns={columns}
-        pageSize={8}
-        checkboxSelection
-      />
+    <div className='userWrapper'>
+      <Link to="/users/new">
+        <button className="AddButton">Create New User</button>
+      </Link>
+      <div className="userList">
+        <DataGrid
+          rows={data}
+          getRowId={(row) => row.id}
+          disableSelectionOnClick
+          columns={columns}
+          pageSize={10}
+          checkboxSelection
+        />
+      </div>
     </div>
   );
 };

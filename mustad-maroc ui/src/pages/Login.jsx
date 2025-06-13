@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import "./css/login.css"
 import { login } from '../redux/apiCalls';
 import { useDispatch, useSelector } from 'react-redux';
+import { signIn } from '../services/auth';
 
 const Login = () => {
 
@@ -10,10 +11,22 @@ const Login = () => {
     const dispatch = useDispatch();
     const {isFetching, error} = useSelector((state)=> state.user);
 
-    const handleClick = (e)=>{
-        e.preventDefault();
-        login(dispatch, {username, password});
-    };
+
+const handleClick = async (e) => {
+  e.preventDefault();
+  try {
+    const token = await signIn(username, password);
+    console.log("Cognito Token:", token);
+
+    // Store token if needed:
+    localStorage.setItem("cognito_token", token);
+
+    // Optional: navigate to dashboard
+  } catch (err) {
+    console.error("Login failed:", err);
+    // Show error to user
+  }
+};
 
     return (
         <div className="login-container">

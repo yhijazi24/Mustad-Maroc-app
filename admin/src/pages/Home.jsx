@@ -2,9 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react'
 import './css/home.css'
 import WidgetSm from '../conponents/WidgetSm'
 import WidgetLg from '../conponents/WidgetLg'
-import Charts from '../conponents/Charts'
 import { userRequest } from '../../requestMethods'
-import FeaturedInfo from '../conponents/FeaturedInfo'
+import ActionsPage from '../conponents/Actions'
 
 const Home = () => {
   const [userStats, setUserStats] = useState([]);
@@ -44,11 +43,12 @@ res.data.map(item =>
 
   return (
     <div className='home'>
-      <FeaturedInfo />
-      <Charts data={userStats} title="User Analytics" grid dataKey="Active User" />
       <div className='homeWidgets'>
         <WidgetSm />
         <WidgetLg />
+      </div>
+      <div className='homeActions'>
+        <ActionsPage />
       </div>
     </div>
   )

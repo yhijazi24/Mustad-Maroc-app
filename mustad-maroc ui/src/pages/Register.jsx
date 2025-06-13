@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerFailure, registerStart, registerSuccess } from '../redux/userRedux';
+import { registerUser } from '../services/auth';
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -38,26 +39,22 @@ const Register = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
 
-    if (password !== passwordConfirm) {
-      setErrorMessage("Passwords do not match.");
-      return;
-    }
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const userData = {
-      username,
-      firstName,
-      lastName,
-      email,
-      phone,
-      industry,
-      password,
-    };
+  if (password !== passwordConfirm) {
+    setErrorMessage("Passwords do not match.");
+    return;
+  }
 
-    register(userData);
-  };
+  try {
+    await registerUser(username, password, email);
+    setSuccessMessage("Check your email to verify your account.");
+  } catch (err) {
+    setErrorMessage(err);
+  }
+};
 
   return (
     <div className="register-container">
